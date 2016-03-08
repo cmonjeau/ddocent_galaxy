@@ -38,13 +38,13 @@
                 <option value="yes">Trimmed</option>
             </param>
             <when value="no">
-                <repeat name="not_trimmed_repeat" title="samples">
+                <repeat name="not_trimmed_repeat" title="samples" min="1">
                    <param format="fastqsanger" name="forward" type="data" label="Left/Forward reads" help=""/>
                    <param format="fastqsanger" name="reverse" type="data" label="Right/Reverse reads" help=""/>
                 </repeat>
             </when>
             <when value="yes">
-                <repeat name="trimmed_repeat" title="samples">
+                <repeat name="trimmed_repeat" title="samples" min="1">
                    <param format="fastqsanger" name="trimmed_forward" type="data" label="Trimmed Left/Forward reads" help=""/>
                    <param format="fastqsanger" name="trimmed_paired_end" type="data" label="Trimmed paired-end reads" help=""/>
                 </repeat>

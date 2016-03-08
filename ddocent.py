@@ -90,7 +90,7 @@ def __main__():
            os.system("gzip -c "+trimmed_R[0]+" > Pop1_Sample"+str(sample_num)+".R.fq.gz")
            sample_num =+ 1
 
-    cmd_line = ["dDocent"]
+    os.system("dDocent config_file")
 
 
 if __name__=="__main__": __main__()
