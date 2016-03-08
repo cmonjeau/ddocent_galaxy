@@ -1,0 +1,79 @@
+<tool id="ddocent" name="dDocent tool" version="2.1">
+    <requirements>
+       <requirement type="package" version="2.1">ddocent</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command interpreter="python"><![CDATA[
+       ddocent.py
+         --trimmed $inputs.trimmed_or_not_trimmed 
+         --type $type_of_assembly
+         --mapping $mapping.mapping_reads
+         --clustering_sim $clustering_sim
+         #if $mapping.mapping_reads == "yes":
+		--mapping_match_value $mapping.mapping_match_value
+                --mapping_mismatch_value $mapping.mapping_mismatch_value
+                --mapping_gapopen_penalty $mapping.mapping_gapopen_penalty               
+         #end if
+         --calling_snp ${calling_snp}
+         ## INPUTS DATA
+         #if $inputs.trimmed_or_not_trimmed == "no":
+            #for $sample in $inputs.not_trimmed_repeat
+               --forward $sample.forward
+	       --reverse $sample.reverse
+	    #end for
+         #else
+            #for $sample in $inputs.trimmed_repeat
+               --trimmed_forward $sample.trimmed_forward
+               --trimmed_paired_end $sample.trimmed_paired_end
+            #end for
+         #end if
+    ]]>
+    </command>
+    <inputs>
+    <conditional name="inputs">
+            <param name="trimmed_or_not_trimmed" type="select" label="Trimmed or not trimmed data?">
+                <option value="no">Not trimmed</option>
+                <option value="yes">Trimmed</option>
+            </param>
+            <when value="no">
+                <repeat name="not_trimmed_repeat" title="samples">
+                   <param format="fastqsanger" name="forward" type="data" label="Left/Forward reads" help=""/>
+                   <param format="fastqsanger" name="reverse" type="data" label="Right/Reverse reads" help=""/>
+                </repeat>
+            </when>
+            <when value="yes">
+                <repeat name="trimmed_repeat" title="samples">
+                   <param format="fastqsanger" name="trimmed_forward" type="data" label="Trimmed Left/Forward reads" help=""/>
+                   <param format="fastqsanger" name="trimmed_paired_end" type="data" label="Trimmed paired-end reads" help=""/>
+                </repeat>
+            </when>
+    </conditional>
+    <param name="type_of_assembly" type="select" label="Type of assembly">
+        <option value="PE">Paired-end</option>
+        <option value="RPE">Paired-end for RAD protocol with random shearing</option>
+    </param>
+    <param name="clustering_sim" type="float" min="0" max="1" value="0.84" label="Clustering similarity?"/>
+    <conditional name="mapping">
+       <param name="mapping_reads" type="select" label="Mapping reads?">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+       </param>
+       <when value="yes">
+          <param name="mapping_match_value" type="integer" min="0" value="1" label="Mapping match value"/>
+          <param name="mapping_mismatch_value" type="integer" min="0" value="3" label="Mapping missmatch_value"/>
+          <param name="mapping_gapopen_penalty" type="integer" min="0" value="5" label="Mapping gapopen penalty"/>
+       </when>
+       <when value="no">
+       </when>
+    </conditional>   
+   <param name="calling_snp" type="boolean" checked="true" label="Calling SNPs?" /> 
+   </inputs>
+    <outputs>
+       <data name="log" format="txt" label="result.log with ${tool.name} on ${on_string}" />/>
+    </outputs>
+    <help><![CDATA[
+        TODO: Fill in help.
+    ]]></help>
+</tool>
